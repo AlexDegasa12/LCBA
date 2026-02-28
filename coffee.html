@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee Shop Simulator</title>
+    <style>
+        :root {
+            --bg-overlay: rgba(0,0,0,0.4);
+            --counter-color: #5d4037;
+            --money-color: #2ecc71;
+            --text-color: #fff;
+            --accent-color: #f1c40f;
+            --coffee-dark: #4b2e2a;
+            --coffee-medium: #7a4b45;
+            --coffee-light: #f3e6df;
+            --coffee-accent: #d9a066;
+        }
+
+        * { box-sizing: border-box; user-select: none; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #222;
+        }
+
+        #game-container {
+            width: 100%;
+            max-width: 500px;
+            height: 95vh;
+            background: #fff;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+
+        .main-area {
+    flex: 1;
+    
+    background: linear-gradient(180deg, #6f4e37 0%, #5a3d2f 60%, #4b2e2a 100%);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+        .main-area::before {
+            content: '';
+            position: absolute; top:0; left:0; right:0; bottom:0;
+            background: var(--bg-overlay);
+            pointer-events: none;
+        }
+
+        .top-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
+        }
+
+        .home-btn {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(5px);
+            border: 1px solid white;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .stats {
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 3px black;
+            display: flex;
+            gap: 15px;
+        }
+
+        .time-bar-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.3);
+            z-index: 10;
+        }
+
+        .time-bar {
+            height: 100%;
+            background: var(--accent-color);
+            width: 0%;
+            transition: width 1s linear;
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+
+        .customer-area {
+            height: 180px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 2;
+        }
+
+        .customer {
+            width: 100px;
+            height: 120px;
+            position: absolute;
+            bottom: -150px;
+            transition: bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .customer.active { bottom: 10px; }
+
+        .customer-body {
+            width: 60px; height: 60px;
+            background: #3498db;
+            border-radius: 30px 30px 0 0;
+            position: relative;
+        }
+
+        .customer-head {
+            width: 50px; height: 50px;
+            background: #ffccaa;
+            border-radius: 50%;
+            position: absolute;
+            top: -25px;
+            left: 5px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        }
+
+        .order-bubble {
+            position: absolute;
+            top: -80px;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            border: 2px solid #333;
+            font-weight: bold;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .order-bubble::after {
+            content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
+            border-width: 10px 10px 0; border-style: solid; border-color: #333 transparent;
+        }
+        .order-bubble::before {
+            content: ''; position: absolute; bottom: -7px; left: 50%; transform: translateX(-50%);
+            border-width: 8px 8px 0; border-style: solid; border-color: white transparent;
+            z-index: 1;
+        }
+
+        .customer.active .order-bubble { opacity: 1; transform: scale(1); top: -90px; }
+
+        .counter {
+            background: var(--counter-color);
+            padding: 20px;
+            border-top: 8px solid #3e2723;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .cup-container {
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .cup {
+            width: 50px; height: 70px;
+            background: #fff;
+            border-radius: 0 0 10px 10px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #ddd;
+        }
+
+        .cup::after {
+            content: ''; position: absolute; right: -8px; top: 10px;
+            width: 10px; height: 30px; border: 3px solid #fff; border-radius: 50%;
+        }
+
+        .cup-fill {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            background: #6f4e37;
+            height: 0%;
+            transition: height 0.3s, background-color 0.3s;
+        }
+
+        .cup-text {
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .recipe-guide {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            color: #ddd;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+        }
+        .recipe-item span { color: var(--accent-color); font-weight: bold; }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .btn-ing {
+            background: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 5px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #ccc;
+            transition: transform 0.1s;
+            font-size: 0.85rem;
+        }
+        .btn-ing:active { transform: translateY(4px); box-shadow: none; }
+
+        .action-btns {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-action {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .btn-serve { background: var(--money-color); box-shadow: 0 4px 0 #27ae60; }
+        .btn-serve:active { transform: translateY(4px); box-shadow: none; }
+        .btn-trash { background: #e74c3c; box-shadow: 0 4px 0 #c0392b; }
+        .btn-trash:active { transform: translateY(4px); box-shadow: none; }
+        .btn-place { background: #d35400; box-shadow: 0 4px 0 #b34700; }
+
+        .screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 20;
+            text-align: center;
+            padding: 20px;
+        }
+        .hidden { display: none; }
+
+        .btn-start {
+            padding: 15px 50px;
+            font-size: 1.3rem;
+            background: var(--accent-color);
+            border: none;
+            color: #333;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 30px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(241, 196, 15, 0.4);
+            transition: transform 0.2s;
+        }
+        .btn-start:hover { transform: scale(1.05); }
+
+        .float-money {
+            position: absolute;
+            color: var(--money-color);
+            font-weight: bold;
+            font-size: 2rem;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            animation: floatUp 1.5s forwards;
+            z-index: 15;
+            pointer-events: none;
+        }
+        @keyframes floatUp {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            20% { transform: translate(-50%, -80%) scale(1.2); opacity: 1; }
+            100% { transform: translate(-50%, -150%) scale(1); opacity: 0; }
+        }
+
+        /* --- Coffee Alert component and sheeshable styles --- */
+        .coffee-alert-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(75,46,42,0.35);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            backdrop-filter: blur(2px);
+        }
+        .coffee-alert {
+            width: 360px;
+            max-width: calc(100% - 32px);
+            background: linear-gradient(180deg, var(--coffee-light), #fffaf6);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            padding: 18px;
+            color: var(--coffee-dark);
+            transform: translateY(12px) scale(.98);
+            opacity: 0;
+            transition: transform .22s ease, opacity .22s ease;
+            font-family: Arial, sans-serif;
+        }
+        .coffee-alert.show { transform: translateY(0) scale(1); opacity: 1; }
+        .coffee-alert h3 { margin: 0 0 6px; font-size: 18px; color: var(--coffee-dark); }
+        .coffee-alert p { margin: 0 0 12px; color: #5a3f3a; }
+        .coffee-alert .badge {
+            display: inline-block;
+            background: var(--coffee-medium);
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+        .coffee-alert .actions { display:flex; gap:8px; margin-top:12px; }
+        .coffee-alert .btn {
+            flex:1;
+            padding:10px 12px;
+            border-radius:8px;
+            border: none;
+            cursor: pointer;
+            font-weight:600;
+        }
+        .coffee-alert .btn.confirm { background: var(--coffee-dark); color: #fff; }
+        .coffee-alert .btn.dismiss { background: transparent; color: var(--coffee-medium); border: 1px solid rgba(122,75,69,0.12); }
+        .coffee-alert .meta { font-size:12px; color:#6b4f4a; margin-top:8px; }
+
+        /* small toast */
+        .mini-toast {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 24px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 8px;
+            z-index: 9998;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity .2s ease;
+        }
+        .mini-toast.show { opacity: 1; }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <div class="time-bar-container">
+        <div class="time-bar" id="time-bar"></div>
+    </div>
+
+    <div class="top-bar">
+        <button class="home-btn" onclick="exitToHome()">Exit</button>
+        <div class="stats">
+            <span>📅 Day <span id="day-display">1</span></span>
+            <span>💰 ₱<span id="money-display">0</span></span>
+        </div>
+    </div>
+
+    <div class="main-area">
+        <div class="customer-area">
+            <div class="customer" id="customer">
+                <div class="order-bubble" id="order-text">Hot Latte</div>
+                <div class="customer-head"></div>
+                <div class="customer-body"></div>
+            </div>
+        </div>
+
+        <div class="counter">
+            <div class="recipe-guide">
+                <div class="recipe-item">☕ + 💧 = <span>Espresso</span></div>
+                <div class="recipe-item">☕ + 🥛 = <span>Latte</span></div>
+                <div class="recipe-item">☕ + 🥛 + 🍫 = <span>Mocha</span></div>
+                <div class="recipe-item">Add 🧊 for <span>Cold</span></div>
+            </div>
+
+            <div class="cup-container">
+                <div class="cup">
+                    <div class="cup-fill" id="cup-fill"></div>
+                </div>
+                <div>
+                    <div class="cup-text" id="cup-text">Empty Cup</div>
+                    <div style="font-size:12px;color:#fff;margin-top:6px;">Placed: <span id="placed-count">0</span> / <span id="required-count">0</span></div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="btn-ing" onclick="addIng('Espresso')">☕ Espresso</button>
+                <button class="btn-ing" onclick="addIng('Milk')">🥛 Milk</button>
+                <button class="btn-ing" onclick="addIng('Choco')">🍫 Choco</button>
+                <button class="btn-ing" onclick="addIng('Ice')">🧊 Ice</button>
+                <button class="btn-ing" onclick="addIng('Water')">💧 Water</button>
+            </div>
+
+            <div class="action-btns">
+                <button class="btn-action btn-trash" onclick="trashCup()">🗑️ Trash</button>
+                <button class="btn-action btn-place" onclick="placeCup()">📥 Place</button>
+                <button class="btn-action btn-serve" onclick="serveOrder()">✅ Serve</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="start-screen" class="screen">
+        <h1 style="font-size: 2.5rem; margin-bottom: 10px;">☕ Coffee Shop</h1>
+        <p style="font-size: 1.2rem; opacity: 0.9;">Work from 8:00 AM to 8:00 PM</p>
+        <p style="color: var(--accent-color);">Serve customers correctly to earn ₱250!</p>
+        <button class="btn-start" onclick="startGame()">Start Day 1</button>
+        <br><br>
+        <button class="home-btn" onclick="exitToHome()">Exit Home</button>
+    </div>
+
+    <div id="end-screen" class="screen hidden">
+        <h1>Day Complete!</h1>
+        <p>Total Earnings:</p>
+        <h2 style="color: var(--money-color); font-size: 3rem; margin: 10px 0;">₱<span id="final-score">0</span></h2>
+        <button class="btn-start" onclick="startNextDay()">Start Next Day</button>
+        <br><br>
+        <button class="home-btn" onclick="exitToHome()">Exit Home</button>
+    </div>
+</div>
+
+<!-- Coffee alert  -->
+<div id="coffeeAlertBackdrop" class="coffee-alert-backdrop" role="dialog" aria-hidden="true">
+  <div id="coffeeAlert" class="coffee-alert" role="document" aria-labelledby="coffeeAlertTitle">
+    <div class="badge" id="coffeeBadge">New Order</div>
+    <h3 id="coffeeAlertTitle">Customer wants <span id="coffeeProduct">Coke</span></h3>
+    <p id="coffeeQty">Quantity: <strong>1</strong></p>
+    <div class="meta" id="coffeeMeta">Auto order — please confirm</div>
+    <div class="actions">
+      <button class="btn confirm" id="coffeeConfirmBtn">Confirm</button>
+      <button class="btn dismiss" id="coffeeDismissBtn">Dismiss</button>
+    </div>
+  </div>
+</div>
+
+<div id="miniToast" class="mini-toast" aria-hidden="true"></div>
+
+<script>
+    
+    // pang link sa homepage
+    const HOME_URL = "home.html"; 
+    const WORK_HOURS = 12;
+    const REAL_MS_PER_GAME_HOUR = 60000;
+
+    let money = 0;
+    let day = 1;
+    let gameTime = 0;
+    let currentCup = [];
+    let isDayActive = false;
+    let customerTimer = null;
+    let gameLoopTimer = null;
+    let currentCustomer = null;
+
+    // Placed cups
+    let placedCups = []; // array cutiees na may ingredients ng bawat cup na na-place toward current order
+
+    const RECIPES = {
+        "Hot Espresso": ["Espresso", "Water"],
+        "Iced Espresso": ["Espresso", "Ice"],
+        "Hot Latte": ["Espresso", "Milk"],
+        "Iced Latte": ["Espresso", "Milk", "Ice"],
+        "Hot Mocha": ["Espresso", "Milk", "Choco"],
+        "Iced Mocha": ["Espresso", "Milk", "Choco", "Ice"]
+    };
+    const MENU_KEYS = Object.keys(RECIPES);
+
+    // UI helpers
+    function exitToHome() { window.location.href = HOME_URL; }
+
+    function showMiniToast(text, ms = 1400) {
+        const t = document.getElementById('miniToast');
+        t.innerText = text;
+        t.classList.add('show');
+        t.setAttribute('aria-hidden', 'false');
+        setTimeout(() => {
+            t.classList.remove('show');
+            t.setAttribute('aria-hidden', 'true');
+        }, ms);
+    }
+
+    // flow control ng game, start ng game, end ng day, start next day, reset ng day, start clock, schedule customer, at end day
+    function startGame() {
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('end-screen').classList.add('hidden');
+        resetDay();
+        isDayActive = true;
+        startClock();
+        scheduleCustomer();
+    }
+
+    function startNextDay() {
+        day++;
+        document.getElementById('day-display').innerText = day;
+        startGame();
+    }
+
+    function resetDay() {
+        gameTime = 0;
+        currentCup = [];
+        placedCups = [];
+        updateCupDisplay();
+        updatePlacedDisplay();
+        document.getElementById('time-bar').style.width = '0%';
+    }
+
+    function startClock() {
+        clearInterval(gameLoopTimer);
+        gameLoopTimer = setInterval(() => {
+            if(!isDayActive) return;
+            gameTime++;
+            const percentage = (gameTime / WORK_HOURS) * 100;
+            document.getElementById('time-bar').style.width = percentage + '%';
+            if (gameTime >= WORK_HOURS) {
+                endDay();
+            }
+        }, REAL_MS_PER_GAME_HOUR);
+    }
+
+    function endDay() {
+        isDayActive = false;
+        clearInterval(gameLoopTimer);
+        clearTimeout(customerTimer);
+        document.getElementById('customer').classList.remove('active');
+        document.getElementById('final-score').innerText = money;
+        document.getElementById('end-screen').classList.remove('hidden');
+    }
+
+    // customer scheduling and queueing logic, para if may customer na at may alert, hindi muna mag-spawn ng bagong customer, instead i-queue yung order, tapos pag na-dismiss yung current customer or natapos yung alert, saka i-process yung queue para mag-spawn ng next customer gets mo loved?
+    let orderQueue = [];
+    let alertOpen = false;
+
+    function scheduleCustomer() {
+        if(!isDayActive) return;
+        customerTimer = setTimeout(() => {
+            spawnCustomer();
+        }, 30000);
+    }
+
+    function spawnCustomer() {
+        if(!isDayActive) return;
+        if (currentCustomer || alertOpen) {
+            orderQueue.push(true);
+            return;
+        }
+
+        const order = MENU_KEYS[Math.floor(Math.random() * MENU_KEYS.length)];
+        const requestedQty = Math.floor(Math.random() * 5) + 1; // 1..5
+
+        showCustomerAlert(order, requestedQty, { meta: 'Auto order — please confirm' })
+          .then(result => {
+              if (result.action === 'confirm') {
+                  currentCustomer = {
+                      orderName: order,
+                      ingredients: RECIPES[order],
+                      qty: requestedQty
+                  };
+                  placedCups = [];
+                  updatePlacedDisplay();
+                  document.getElementById('order-text').innerText = `${order} x${requestedQty}`;
+                  document.getElementById('required-count').innerText = requestedQty;
+                  document.getElementById('customer').classList.add('active');
+                  showMiniToast(`Customer arrived: ${order} x${requestedQty}`);
+              } else {
+                  showMiniToast('Order dismissed');
+              }
+          })
+          .catch(() => {})
+          .finally(() => {
+              scheduleCustomer();
+          });
+    }
+
+    function processQueue() {
+        if (!isDayActive) return;
+        if (orderQueue.length > 0 && !currentCustomer && !alertOpen) {
+            orderQueue.shift();
+            spawnCustomer();
+        }
+    }
+
+    function dismissCustomer() {
+        document.getElementById('customer').classList.remove('active');
+        currentCustomer = null;
+        currentCup = [];
+        placedCups = [];
+        updateCupDisplay();
+        updatePlacedDisplay();
+        setTimeout(() => {
+            processQueue();
+            scheduleCustomer();
+        }, 800);
+    }
+
+    //here the logic ng gameplay, pag add ng ingredients, pag trash ng cup, pag update ng display, pag place ng cup, at pag serve ng order
+    function addIng(ing) {
+        if(!currentCustomer) {
+            showMiniToast("Wait for a customer!");
+            return;
+        }
+        if(currentCup.length >= 4) {
+            showMiniToast("Cup is full! Place it or Trash it.");
+            return;
+        }
+        currentCup.push(ing);
+        updateCupDisplay();
+    }
+
+    function trashCup() {
+        currentCup = [];
+        updateCupDisplay();
+    }
+
+    function updateCupDisplay() {
+        const display = document.getElementById('cup-text');
+        const fill = document.getElementById('cup-fill');
+
+        if(currentCup.length === 0) {
+            display.innerText = "Empty Cup";
+            fill.style.height = "0%";
+        } else {
+            display.innerText = currentCup.join(" + ");
+            fill.style.height = (currentCup.length * 25) + "%";
+        }
+    }
+
+    function updatePlacedDisplay() {
+        document.getElementById('placed-count').innerText = placedCups.length;
+        document.getElementById('required-count').innerText = currentCustomer ? (currentCustomer.qty || 0) : 0;
+    }
+
+    // Pang place ng cup, if may current customer at may laman yung cup, i-add sa placedCups queue, then clear currentCup for next one
+    function placeCup() {
+        if (!currentCustomer) {
+            showMiniToast("No active customer to place for.");
+            return;
+        }
+        if (currentCup.length === 0) {
+            showMiniToast("Make a cup first before placing.");
+            return;
+        }
+        // para masave yung cups placedd
+        placedCups.push(currentCup.slice());
+        currentCup = [];
+        updateCupDisplay();
+        updatePlacedDisplay();
+        showMiniToast(`Placed cup (${placedCups.length}/${currentCustomer.qty})`);
+    }
+
+    function serveOrder() {
+        if(!currentCustomer) {
+            showMiniToast("No customer to serve.");
+            return;
+        }
+
+        const requiredQty = currentCustomer.qty || 1;
+        if (placedCups.length < requiredQty) {
+            const need = requiredQty - placedCups.length;
+            showMiniToast(`Need ${need} more placed cup${need > 1 ? 's' : ''} before serving.`);
+            return;
+        }
+
+        // logic pang check kung match yung placed cups sa order ng customer
+        const recipeSorted = currentCustomer.ingredients.slice().sort().join(',');
+        let allMatch = true;
+        for (let i = 0; i < requiredQty; i++) {
+            const cup = placedCups[i] || [];
+            const cupSorted = cup.slice().sort().join(',');
+            if (cupSorted !== recipeSorted) {
+                allMatch = false;
+                break;
+            }
+        }
+
+        if (allMatch) {
+            const qty = requiredQty;
+            money += 250 * qty;
+            document.getElementById('money-display').innerText = money;
+            showFloatingText(`+ ₱${250 * qty}`);
+            //removing placeddd cups
+            placedCups.splice(0, qty);
+            updatePlacedDisplay();
+            dismissCustomer();
+        } else {
+            showMiniToast("Wrong order among placed cups! Customer is angry.");
+            showFloatingText("😡 0", "red");
+            // pang erase ng placed cups
+            placedCups = [];
+            currentCup = [];
+            updateCupDisplay();
+            updatePlacedDisplay();
+            dismissCustomer();
+        }
+    }
+
+    function showFloatingText(text, color = "var(--money-color)") {
+        const el = document.createElement('div');
+        el.classList.add('float-money');
+        el.innerText = text;
+        el.style.color = color;
+        el.style.left = "50%";
+        el.style.top = "40%";
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1000);
+    }
+
+    // alert system sa customer
+    (function () {
+        const backdrop = document.getElementById('coffeeAlertBackdrop');
+        const card = document.getElementById('coffeeAlert');
+        const productEl = document.getElementById('coffeeProduct');
+        const qtyEl = document.getElementById('coffeeQty');
+        const metaEl = document.getElementById('coffeeMeta');
+        const confirmBtn = document.getElementById('coffeeConfirmBtn');
+        const dismissBtn = document.getElementById('coffeeDismissBtn');
+
+        let currentResolve = null;
+        let currentReject = null;
+
+        function openAlert(product, qty, options = {}) {
+            productEl.textContent = product;
+            qtyEl.innerHTML = `Quantity: <strong>${qty}</strong>`;
+            metaEl.textContent = options.meta || 'Auto order — please confirm';
+            backdrop.style.display = 'flex';
+            requestAnimationFrame(() => card.classList.add('show'));
+            backdrop.setAttribute('aria-hidden', 'false');
+
+            alertOpen = true;
+
+            return new Promise((resolve, reject) => {
+                currentResolve = resolve;
+                currentReject = reject;
+            });
+        }
+
+        function closeAlert() {
+            card.classList.remove('show');
+            backdrop.setAttribute('aria-hidden', 'true');
+            setTimeout(() => { backdrop.style.display = 'none'; }, 240);
+            alertOpen = false;
+            currentResolve = null;
+            currentReject = null;
+        }
+
+        confirmBtn.addEventListener('click', () => {
+            if (currentResolve) currentResolve({ action: 'confirm' });
+            closeAlert();
+        });
+        dismissBtn.addEventListener('click', () => {
+            if (currentResolve) currentResolve({ action: 'dismiss' });
+            closeAlert();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (backdrop.style.display === 'flex' && e.key === 'Escape') {
+                if (currentResolve) currentResolve({ action: 'dismiss' });
+                closeAlert();
+            }
+        });
+
+        window.showCustomerAlert = async function (product, qty, opts = {}) {
+            try {
+                const result = await openAlert(product, qty, opts);
+                return result;
+            } catch (err) {
+                return { action: 'dismiss' };
+            }
+        };
+    })();
+
+    // sa spawn ng customer, if may alert or may current customer, i-queue yung order instead of spawning immediately
+    setInterval(() => {
+        if (!alertOpen && !currentCustomer) processQueue();
+    }, 800);
+
+   
+    document.getElementById('day-display').innerText = day;
+    document.getElementById('money-display').innerText = money;
+    document.getElementById('placed-count').innerText = 0;
+    document.getElementById('required-count').innerText = 0;
+
+</script>
+
+</body>
+</html>
