@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>LCBA</title>
-  <link rel="stylesheet" href="home.css" />
+  <link rel="stylesheet" href="hehe.css" />
   <link rel="shortcut icon" type="image/x-icon" href="icon.png">
   <script src="https://cdn.tailwindcss.com"></script>
 
@@ -12,35 +12,27 @@
 <body>
   <header class="site-header">
     <div class="topbar flex flex-col md:flex-row items-center justify-between p-2 text-xs md:text-sm bg-gray-100">
-      <img src="logo.png" alt="Logo" class="topbar-logo" />
-      <div>SMART:0961-074-5530   |   info@lcba.edu.ph   |   GMAIL</div>
+        <img src="logo.png" alt="Logo" class="topbar-logo w-16 md:w-20 mb-2 md:mb-0" />
+        <div>SMART:0961-074-5530 | info@lcba.edu.ph | GMAIL</div>
     </div>
-
     <nav class="main-nav flex flex-col md:flex-row items-center justify-between p-4 bg-[#051274]">
-       
-    <button id="mobile-menu-btn" class="md:hidden p-2" onclick="toggleMenu()">
-  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-  </svg>
-</button>
+  <!-- Mobile Menu Button -->
+  <button id="mobile-menu-btn" class="md:hidden p-2 text-white" onclick="toggleMenu()">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+    </svg>
+  </button>
+  
   <div class="input-container">
     <input type="search" class="input" placeholder="Search..." id="searchInput" />
     <button onclick="searchFunction()" style="border:none; background:transparent; cursor:pointer; margin-left:5px;">🔍</button>
-</div>
+  </div>
   
   <ul id="nav-list" class="nav-list hidden md:flex flex-col md:flex-row w-full md:w-auto mt-4 md:mt-0 space-y-2 md:space-y-0 space-x-0 md:space-x-4 text-center">
-    <li><a href="home.html">HOME</a></li>
-    <li><a href="aboutt.html">ABOUT</a></li>
+    <li><a href="home.html">LCBA</a></li>
     <li><a href="abm.html">ABM</a></li>
-    <li class="dropdown">
-    
-    <a href="gallery.html" class="dropbtn">GALLERY &#9662;</a>
-    
-    
-    <div class="dropdown-content">
-        <a href="gallery.html"> Image Gallery</a>
-        <a href="video.html"> Video Gallery</a>
-    </div>
+    <li><a href="gallery.html">IMAGE GALLERY</a></li>
+    <li><a href="video.html">VIDEO GALLERY</a></li>
     <li><a href="coffee.html">GAMES</a></li>
   </ul>
 </nav>
@@ -72,7 +64,100 @@
     </section>
   </main>
 
-  
+   <div class="container">
+
+        <section>
+            <h2>About LCBA</h2>
+            <p>Welcome to Laguna College of Business and Art (LCBA), a premier educational institution dedicated to providing quality education grounded in the principles of integrity, excellence, and service. Founded on the vision of our beloved founder, we continue to mold future leaders who will contribute meaningfully to society.</p>
+        </section>
+
+        <section>
+            <div class="founder-header">
+                <h2 style="color: white; border-bottom: none; margin-bottom: 0; padding-bottom: 0;">THE FOUNDER</h2>
+            </div>
+            <div class="founder-content">
+    <p>Pedro Evangelista Llamas was born in Pagsanjan, Laguna on August 01, 1884. Both of his parents, Gabriel Llamas and Eleutera Evangelista were born and raised in the same town too.</p>
+    
+    <p>He studied in St. Joseph Catholic School in Hongkong for two years and continued his education in the United States where he received his Bachelor of Science in Pharmaceutical Chemistry from the University of Michigan.</p>
+    
+    <p>At the young age of 28, he married Josefa Gomez Francia on August 26, 1912 and was blessed with nine children: Herminio, Guadalupe, Fidel, Amor, Luis, Jose, Mario, Carlos, and Eva.</p>
+    
+    <p>At 32, he was elected Municipal President of Pagsanjan for four years (1916–1920). He declined to be re-elected to the position, even when the townspeople wanted him to continue on, due to his health problems.</p>
+    
+    <p>In 1923, he founded the Pagsanjan Academy to serve and augment the lack of schools in his town. Later on, he realized that there was also a need for secondary schools. Children from Pagsanjan went to Laguna High School in Sta. Cruz, Rural High in Los Banos or in Manila to further their schooling. However, no one went to Calamba, as there were no secondary schools there. This thought bore fruit and thus, Laguna Institute was established in 1930.</p>
+    
+    <p>The Laguna Institute flourished amidst the havoc and strife of World War II. It closed down temporarily in 1945 and opened its doors once again in 1950.</p>
+    
+    <p>Don Pedro Llamas died January 13, 1946 at the age of 61 due to a failing heart condition. His demise was a great loss for his family and to the community. Nevertheless, his love for the Filipinos of Laguna continued on with the legacy he left with his heirs; and that is of humble servitude exemplified by providing quality education to the community. He envisioned educating the community and equipping people to become leaders leading them into abundance.</p>
+</div>
+        </section>
+
+        
+        <section>
+            <h2>Philosophy, Vision & Mission</h2>
+            <div class="pvm-wrapper">
+                <div class="pvm-card">
+                    <h3>PHILOSOPHY</h3>
+                    <p>Inspired by Dr. Jose Rizal's educational principles, LCBA Education upholds a balanced curriculum towards holistic development for a better quality of life.</p>
+                </div>
+                
+                <div class="pvm-card">
+                    <h3>VISION</h3>
+                    <p>LCBA envisions to become an autonomous higher education institution committed to producing holistically developed and globally competitive lifelong learners.</p>
+                </div>
+                
+                <div class="pvm-card">
+                    <h3>MISSION</h3>
+                    <p>LCBA commits itself to the total human development of the learners through value-laden and competency-based education, policy-relevant research, and sustainable community involvement.</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Institution's Core Values</h2>
+            <p>As LCBAian, employees and students should develop and possess the following values:</p>
+            
+            <div class="values-container">
+                <div class="value-box">
+                    <h3>INTEGRITY</h3>
+                    <p>This means doing the right thing even when no one is looking.</p>
+                </div>
+                
+                <div class="value-box">
+                    <h3>POSITIVITY</h3>
+                    <p>This is finding the good in everything.</p>
+                </div>
+                
+                <div class="value-box">
+                    <h3>MINDFULNESS</h3>
+                    <p>This means respecting and accepting individual differences.</p>
+                </div>
+                
+                <div class="value-box">
+                    <h3>EXCELLENCE</h3>
+                    <p>This is exemplifying proper attitude, skill, and knowledge.</p>
+                </div>
+            </div>
+        </section>
+
+
+        <section>
+            <h2>Quality Objectives</h2>
+            <div class="objectives-container">
+                <div class="objective-item">Promote total development among students for better quality of life;</div>
+                <div class="objective-item">Employ experientially and academically aligned educators;</div>
+                <div class="objective-item">Implement values-laden and competency-based education;</div>
+                <div class="objective-item">Conduct policy-relevant personnel and student research projects;</div>
+                <div class="objective-item">Acquire adequate library holdings and maximize library utilization among faculty and students;</div>
+                <div class="objective-item">Provide curricular and co-curricular activities delivered by highly competent and service-oriented personnel;</div>
+                <div class="objective-item">Provide state-of-the-art laboratories and facilities;</div>
+                <div class="objective-item">Provide a satisfactory, conducive, and safe learning environment;</div>
+                <div class="objective-item">Develop and utilize efficient and effective administrative systems;</div>
+                <div class="objective-item">Implement community-empowering extension program; and</div>
+                <div class="objective-item">Produce globally competitive graduates who are driven to pursue further studies and are equipped for the world of employment and entrepreneurship.</div>
+            </div>
+        </section>
+
 
 <footer class="bg-[#051274]">
     <div class="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
@@ -148,8 +233,6 @@
       </div>
     </div>
 </footer>
-
-  </footer>
 
   <script src="home.js"></script>
 </body>
