@@ -344,3 +344,81 @@ p {
 .dropdown:hover .dropdown-content {
     display: block;
 }
+
+/* Mobile menu styles */
+@media (max-width: 768px) {
+  #nav-list.hidden {
+    display: none;
+  }
+  
+  #nav-list {
+    display: flex;
+  }
+  
+  .dropdown-content {
+    position: static;
+    background-color: #f9f9f9;
+    box-shadow: none;
+    text-align: center;
+  }
+  
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+  
+  /* Footer grid - single column on mobile */
+  footer .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Make container responsive */
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* PVM cards - stack on mobile */
+.pvm-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.pvm-card {
+  flex: 1 1 300px;
+  padding: 1.5rem;
+  background: #f9f9f9;
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* Values boxes - stack on mobile */
+.values-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.value-box {
+  flex: 1 1 250px;
+  padding: 1.5rem;
+  background: #f9f9f9;
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* Objectives - stack on mobile */
+.objectives-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.objective-item {
+  padding: 1rem;
+  background: #f9f9f9;
+  border-radius: 4px;
+}

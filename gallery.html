@@ -11,31 +11,34 @@
 </head>
 <body>
   <header class="site-header">
-    <div class="topbar">
-      <img src="logo.png" alt="Logo" class="topbar-logo" />
-      <div>SMART:0961-074-5530   |   info@lcba.edu.ph   |   GMAIL</div>
+    <div class="topbar flex flex-col md:flex-row items-center justify-between p-2 text-xs md:text-sm bg-gray-100">
+        <img src="logo.png" alt="Logo" class="topbar-logo w-16 md:w-20 mb-2 md:mb-0" />
+        <div>SMART:0961-074-5530 | info@lcba.edu.ph | GMAIL</div>
     </div>
-
-    <nav class="main-nav">
-    <div class="input-container">
+    <nav class="main-nav flex flex-col md:flex-row items-center justify-between p-4 bg-[#051274]">
+  <!-- Mobile Menu Button -->
+  <button id="mobile-menu-btn" class="md:hidden p-2 text-white" onclick="toggleMenu()">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+    </svg>
+  </button>
+  
+  <div class="input-container">
     <input type="search" class="input" placeholder="Search..." id="searchInput" />
     <button onclick="searchFunction()" style="border:none; background:transparent; cursor:pointer; margin-left:5px;">🔍</button>
-</div>
+  </div>
   
-  <ul class="nav-list">
+  <ul id="nav-list" class="nav-list hidden md:flex flex-col md:flex-row w-full md:w-auto mt-4 md:mt-0 space-y-2 md:space-y-0 space-x-0 md:space-x-4 text-center">
     <li><a href="home.html">HOME</a></li>
     <li><a href="aboutt.html">ABOUT</a></li>
     <li><a href="abm.html">ABM</a></li>
     <li class="dropdown">
-    
-    <a href="gallery.html" class="dropbtn">GALLERY &#9662;</a>
-    
-    
-    <div class="dropdown-content">
-        <a href="gallery.html"> Image Gallery</a>
-        <a href="video.html"> Video Gallery</a>
-    </div>
-</li>
+      <a href="gallery.html" class="dropbtn">GALLERY &#9662;</a>
+      <div class="dropdown-content">
+        <a href="gallery.html">Image Gallery</a>
+        <a href="video.html">Video Gallery</a>
+      </div>
+    </li>
     <li><a href="coffee.html">GAMES</a></li>
   </ul>
 </nav>
@@ -81,7 +84,7 @@
                     <span class="text-heading self-center text-2xl font-semibold whitespace-nowrap"></span>
                 </a>
             </div>
-          <div class="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               <div>
               <h2 class="mb-6 text-sm font-semibold text-white uppercase">P.Burgos St., Calamba City, Laguna, 4027</h2>
                   <ul class="text-body font-medium">

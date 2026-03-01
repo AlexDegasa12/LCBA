@@ -277,3 +277,73 @@ footer {
 .dropdown:hover .dropdown-content {
     display: block;
 }
+
+/* Mobile menu styles */
+@media (max-width: 768px) {
+  #nav-list.hidden {
+    display: none;
+  }
+  
+  #nav-list {
+    display: flex;
+  }
+  
+  .dropdown-content {
+    position: static;
+    background-color: #f9f9f9;
+    box-shadow: none;
+    text-align: center;
+  }
+  
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+  
+  /* Footer grid */
+  footer .grid {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Hero text responsive */
+  .hero-content h1 {
+    font-size: 1.5rem;
+  }
+  
+  .hero-content p {
+    font-size: 0.9rem;
+  }
+}
+
+/* Card grid responsive */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Split section responsive */
+.split-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.split-box {
+  flex: 1 1 250px;
+}
+
+/* Container responsive */
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Content card */
+.content-card {
+  padding: 1.5rem;
+  background: #f9f9f9;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}

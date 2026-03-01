@@ -8,3 +8,18 @@ function searchFunction() {
     else if (searchValue === "video") window.location.href = "video.html";
     else alert("Page not found!");
 }
+
+function toggleMenu() {
+  const navList = document.getElementById('nav-list');
+  navList.classList.toggle('hidden');
+}
+
+// Close menu when clicking outside
+document.addEventListener('click', function(event) {
+  const navList = document.getElementById('nav-list');
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  
+  if (!navList.contains(event.target) && !menuBtn.contains(event.target)) {
+    navList.classList.add('hidden');
+  }
+});

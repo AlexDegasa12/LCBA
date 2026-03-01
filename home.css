@@ -280,3 +280,40 @@ main {
 .dropdown:hover .dropdown-content {
     display: block;
 }
+
+
+@media (max-width: 768px) {
+  #nav-list.hidden {
+    display: none;
+  }
+  
+  #nav-list {
+    display: flex;
+  }
+  
+  .dropdown-content {
+    position: static;
+    background-color: #f9f9f9;
+    box-shadow: none;
+    text-align: center;
+  }
+  
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+}
+
+
+footer .grid {
+  grid-template-columns: 1fr;
+}
+
+
+.info-cards {
+  flex-direction: column;
+}
+
+.info-cards .card {
+  width: 100%;
+  margin: 0.5rem 0;
+}
